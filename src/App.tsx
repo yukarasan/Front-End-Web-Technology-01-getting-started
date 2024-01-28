@@ -20,13 +20,14 @@ function AlbumPicker() {
     const mbResult = (await response.json()) as {
       releases: { title: string }[];
     };
+    console.log(mbResult);
     const { releases } = mbResult;
     setAlbums(releases.map(({ title }) => title));
   }
   return (
     <form onSubmit={handleSubmit}>
       <label>
-        Artist name:
+        Artist name (test):
         <input name="artist" />
       </label>
       <button type="submit">Search</button>
