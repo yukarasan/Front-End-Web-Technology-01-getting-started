@@ -3,12 +3,14 @@ import './App.css'
 
 function App() {
   return (
-    AlbumPicker()
+    <AlbumPicker />
   )
 }
 
 function AlbumPicker() {
-  const [albums, setAlbums] = useState<string[]>([]);
+  // Updating the state to hold an array of objects
+  const [albums, setAlbums] = useState<{ title: string, releaseDate: string, trackCount: number }[]>([]);
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     const target = e.target as typeof e.target & {
@@ -17,13 +19,19 @@ function AlbumPicker() {
     const artist = encodeURIComponent(target.artist.value);
     const url = `https://musicbrainz.org/ws/2/release?fmt=json&query=artist:${artist}`;
     const response = await fetch(url);
+
+    // Includes dates and track counts in the type
     const mbResult = (await response.json()) as {
-      releases: { title: string }[];
+      releases: { title: string, date: string, 'track-count': number }[];
     };
+    
     console.log(mbResult);
     const { releases } = mbResult;
-    setAlbums(releases.map(({ title }) => title));
+
+    // Updating this to include the release date and track count
+    setAlbums(releases.map(({ title, date, 'track-count': trackCount }) => ({ title, releaseDate: date, trackCount })));
   }
+
   return (
     <form onSubmit={handleSubmit}>
       <label>
@@ -33,8 +41,11 @@ function AlbumPicker() {
       <button type="submit">Search</button>
       <p>Albums:</p>
       <ol>
-        {albums.map((album) => (
-          <li>{album}</li>
+        {albums.map((album, index) => (
+          <li key={index}>
+            {album.title} - Released on: {album.releaseDate || 'Unknown'}
+            {album.trackCount ? `, Tracks: ${album.trackCount}` : ''}
+          </li>
         ))}
       </ol>
     </form>
@@ -42,4 +53,3 @@ function AlbumPicker() {
 }
 
 export default App
-
