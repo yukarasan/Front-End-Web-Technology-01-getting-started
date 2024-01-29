@@ -34,18 +34,22 @@ function AlbumPicker() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <label>
-        Artist name (test):
-        <input name="artist" />
-      </label>
-      <button type="submit">Search</button>
+      <div>
+        <label>
+          Artist name:
+          <input name="artist" />
+        </label>
+      </div>
+      <div>
+        <button type="submit">Search</button>
+      </div>
       <p>Albums:</p>
       <ol>
         {albums.map((album, index) => (
           <li key={index}>
-            {album.title} - Released on: {album.releaseDate || 'Unknown'}
-            {album.trackCount ? `, Tracks: ${album.trackCount}` : ''}
-          </li>
+          <strong>{album.title}</strong> - Released on: {album.releaseDate || 'Unknown'}
+          {album.trackCount ? `, Tracks: ${album.trackCount}` : ''}
+        </li>
         ))}
       </ol>
     </form>
