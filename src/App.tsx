@@ -10,6 +10,7 @@ function App() {
 function AlbumPicker() {
   // Updating the state to hold an array of objects
   const [albums, setAlbums] = useState<{ title: string, releaseDate: string, trackCount: number }[]>([]);
+  const [searchPerformed, setSearchPerformed] = useState(false); // State to track if search has been performed
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -30,6 +31,8 @@ function AlbumPicker() {
 
     // Updating this to include the release date and track count
     setAlbums(releases.map(({ title, date, 'track-count': trackCount }) => ({ title, releaseDate: date, trackCount })));
+    // Updating the state to indicate a search has been performed: 
+    setSearchPerformed(true);
   }
 
   return (
@@ -40,10 +43,15 @@ function AlbumPicker() {
           <input name="artist" />
         </label>
       </div>
-      <div>
-        <button type="submit">Search</button>
+      <div className="search-button">
+        <button type="submit" >Search</button>
       </div>
-      <p>Albums:</p>
+
+      {searchPerformed ? 
+        (albums.length > 0 ? <p>Albums:</p> : <p>No albums found for this artist.</p>) : 
+        <p>Search for your favorite artist!</p>
+      }
+
       <ol>
         {albums.map((album, index) => (
           <li key={index}>
